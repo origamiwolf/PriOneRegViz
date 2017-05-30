@@ -1,0 +1,13 @@
+var schools = {
+	"type": "FeatureCollection",
+	"features": [
+		{
+			"type": "Feature", 
+			"geometry":
+				 {
+					"type": "Point", 
+					"coordinates": [1.4426347903, 103.8000401197]
+				  }, 
+			"properties": {"School": "ADMIRALTY PRIMARY SCHOOL"}
+		}
+	]};
