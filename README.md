@@ -6,5 +6,6 @@ Schools Geodata obtained from Data.gov.sg (https://data.gov.sg) and OneMap (http
 
 Schools registration statistics taken from various online sources (https://www.kiasuparents.com, http://www.domainofexperts.com, https://elite.com.sg and individual school websites).
 
-Disclaimer: 
+**Disclaimer**
+
 This visualisation was done as a programming exercise.  If you actually make use of it to plan your Primary One registration strategy for your kid, don't hold me responsible if your kid doesn't get into your school of choice.  Registration statistics are provided as-is, and no claims are made as to the accuracy of the data.
