@@ -1,37 +1,10 @@
-## Welcome to GitHub Pages
+## Primary One Registration Statistics Visualiser
 
-You can use the [editor on GitHub](https://github.com/origamiwolf/PriOneRegViz/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+A Leaflet.js map showing Singapore's primary schools, and statistics pertaining to the Primary One Registration Exercise.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+Schools Geodata obtained from Data.gov.sg (https://data.gov.sg) and OneMap (https://www.onemap.sg).
 
-### Markdown
+Schools registration statistics taken from various online sources (https://www.kiasuparents.com, http://www.domainofexperts.com, https://elite.com.sg and individual school websites).
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/origamiwolf/PriOneRegViz/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+Disclaimer: 
+This visualisation was done as a programming exercise.  If you actually make use of it to plan your Primary One registration strategy for your kid, don't hold me responsible if your kid doesn't get into your school of choice.  Registration statistics are provided as-is, and no claims are made as to the accuracy of the data.
