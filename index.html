@@ -38,7 +38,7 @@
 <div id="mapid" style="height: 400px;"></div>
 <script>
 	var centre = L.bounds([1.56073, 104.11475], [1.16, 103.502]).getCenter();
-	var mymap = L.map('mapid').setView([centre.x, centre.y], 12);
+	var map = L.map('mapid').setView([centre.x, centre.y], 12);
 
 	var basemap = L.tileLayer('https://maps-{s}.onemap.sg/v3/Default/{z}/{x}/{y}.png', {
 			detectRetina: true,
