@@ -35,13 +35,12 @@
 
 <p>This visualisation was done as a programming exercise.  If you actually make use of it to plan your Primary One registration strategy for your kid, don’t hold me responsible if your kid doesn’t get into your school of choice.  Registration statistics are provided as-is, and no claims are made as to the accuracy of the data.</p>
 
-<div id="mapid" style="height: 400px;"></div>
+<div id="map" style="height: 400px;"></div>
 <script>
 	var centre = L.bounds([1.56073, 104.11475], [1.16, 103.502]).getCenter();
-	var map = L.map('mapid').setView([centre.x, centre.y], 12);
+	var map = L.map('map').setView([centre.x, centre.y], 12);
 
 	var basemap = L.tileLayer('https://maps-{s}.onemap.sg/v3/Default/{z}/{x}/{y}.png', {
-			detectRetina: true,
 			attribution: 'Map data &copy; contributors, <a href="http://SLA.gov.sg">Singapore Land Authority</a>',
 			maxZoom: 18,
             		minZoom: 11
@@ -53,15 +52,25 @@
         map.setMaxBounds([[1.56073, 104.1147], [1.16, 103.502]]);
 	basemap.addTo(map);
 
+
+	/* add schools	*/
+
+	L.geoJSON(schools, {
+		onEachFeature: onEachFeature
+/*
+		onEachFeature: function(feature, layer) {
+    			layer.bindPopup(feature.properties.School);
+  		}
+*/
+	}).addTo(map);
+
 	/* set feature display */
 	function onEachFeature(feature, layer) {
 		layer.bindPopup(feature.properties.School);
 	}
 
-	/* add schools	*/
-	L.geoJSON(schools, {
-	oneachFeature: onEachFeature
-	}).addTo(map);
+
+
 </script>
 
       <footer class="site-footer">
