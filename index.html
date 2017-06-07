@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#157878">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="/PriOneRegViz/assets/css/style.css?v=f6bf5a8f3a721a9b48c5d56068614c360f58b383">
+    <link rel="stylesheet" href="https://origamiwolf.github.io/PriOneRegViz/assets/css/style.css?v=f6bf5a8f3a721a9b48c5d56068614c360f58b383">
     <link rel="stylesheet" href="./leaflet/leaflet.css" />
     <script src="./leaflet/leaflet.js"></script>
     <script src="geodata.geojson" type="text/javascript"></script>
@@ -36,10 +36,10 @@
 
 <p>This visualisation was done as a programming exercise.  If you actually make use of it to plan your Primary One registration strategy for your kid, don’t hold me responsible if your kid doesn’t get into your school of choice.  Registration statistics are provided as-is, and no claims are made as to the accuracy of the data.</p>
 
-<div id="map" style="height: 400px;"></div>
+<div id="map" style="height: 600px;"></div>
 <script>
 	var centre = L.bounds([1.56073, 104.11475], [1.16, 103.502]).getCenter();
-	var map = L.map('map').setView([centre.x, centre.y], 12);
+	var map = L.map('map').setView([centre.x, centre.y], 11);
 
 	var basemap = L.tileLayer('https://maps-{s}.onemap.sg/v3/Default/{z}/{x}/{y}.png', {
 			attribution: 'Map data &copy; contributors, <a href="http://SLA.gov.sg">Singapore Land Authority</a>',
@@ -50,27 +50,42 @@
 	attribution = map.attributionControl;
 	attribution.setPrefix('<img src="https://docs.onemap.sg/maps/images/oneMap64-01.png" style="height:20px;width:20px;"/>');
 
-        map.setMaxBounds([[1.56073, 104.1147], [1.16, 103.502]]);
+	map.setMaxBounds([[1.7, 106.0], [1.0, 102.0]]);
 	basemap.addTo(map);
-
 
 	/* add schools	*/
 
 	L.geoJSON(schools, {
-		onEachFeature: onEachFeature
-/*
-		onEachFeature: function(feature, layer) {
-    			layer.bindPopup(feature.properties.School);
-  		}
-*/
+		onEachFeature: schoolPopup
 	}).addTo(map);
 
-	/* set feature display */
-	function onEachFeature(feature, layer) {
-		layer.bindPopup(feature.properties.School + feature.properties.Y2016);
+	/* display school information in popup */
+	function schoolPopup(feature, layer) {
+		var mtM = feature.properties.MT.includes('M') ? 'Malay':'';
+		var mtC = feature.properties.MT.includes('C') ? 'Chinese':'';
+		var mtT = feature.properties.MT.includes('T') ? 'Tamil':'';
+		var Y2016 = feature.properties.Y2016.split(',');
+		var Y2015 = feature.properties.Y2015.split(',');
+		var Y2014 = feature.properties.Y2014.split(',');
+						
+		var sch_data = '<h2>'+feature.properties.School+'</h2>';
+		sch_data = sch_data + '<b>Handicap Facilities</b>: ' + feature.properties.HFac + '<br>';
+		sch_data = sch_data + '<b>Mother Tongues Offered: </b>' + mtM + ' ' + mtC + ' ' + mtT + '<br>';
+		sch_data = sch_data + '<table>';
+		sch_data = sch_data + '<tr><th></th><th>2016</th><th>2015</th><th>2014</th></tr>';
+		
+		sch_data = sch_data + '<tr><td>Places</td><td>'+Y2016[0]+'</td><td>'+Y2015[0]+'</td><td>'+Y2014[0]+'</td></tr>';
+		sch_data = sch_data + '<tr><td>Phase 1</td><td>'+Y2016[1]+'</td><td>'+Y2015[1]+'</td><td>'+Y2014[1]+'</td></tr>';
+		sch_data = sch_data + '<tr><td>Phase 2A1</td><td>'+Y2016[2]+'</td><td>'+Y2015[2]+'</td><td>'+Y2014[2]+'</td></tr>';
+		sch_data = sch_data + '<tr><td>Phase 2A2</td><td>'+Y2016[3]+'</td><td>'+Y2015[3]+'</td><td>'+Y2014[3]+'</td></tr>';
+		sch_data = sch_data + '<tr><td>Phase 2B</td><td>'+Y2016[5]+ '(' + Y2016[4] + ')'+'</td><td>'+Y2015[5]+ '(' + Y2015[4] + ')'+'</td><td>'+Y2014[5]+'(' + Y2014[4] + ')'+'</td></tr>';
+		sch_data = sch_data + '<tr><td>Phase 2C</td><td>'+Y2016[7]+ '(' + Y2016[6] + ')'+'</td><td>'+Y2015[7]+ '(' + Y2015[6] + ')'+'</td><td>'+Y2014[7]+'(' + Y2014[6] + ')'+'</td></tr>';
+		sch_data = sch_data + '<tr><td>Phase 2C(S)</td><td>'+Y2016[9]+ '(' + Y2016[8] + ')'+'</td><td>'+Y2015[9]+ '(' + Y2015[8] + ')'+'</td><td>'+Y2014[9]+'(' + Y2014[8] + ')'+'</td></tr>';
+		
+		sch_data = sch_data + '</table>';
+		
+		layer.bindPopup(sch_data, {maxWidth: 400});
 	}
-
-
 
 </script>
 
