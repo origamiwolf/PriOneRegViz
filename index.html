@@ -108,6 +108,36 @@
 		layer.bindPopup(sch_data, {maxWidth: '400', className: 'custom-popup'});
 	}
 
+	/* add functionality for the 2 km circle */
+	/* I really should be defining a new object for this */
+	var clickCircle1;
+	var clickCircle2;
+	var clickCircleCentre;
+	
+	function onMapClick(e) {
+		if (clickCircleCentre != undefined) {
+			map.removeLayer(clickCircle1);
+			map.removeLayer(clickCircle2);
+			map.removeLayer(clickCircleCentre);
+		}
+		
+		clickCircle1 = L.circle(e.latlng, 2000, {
+			color: '#f07300',
+			opacity: 0.3
+		}).addTo(map);
+		
+		clickCircle2 = L.circle(e.latlng, 1000, {
+			color: '#f07300',
+			opacity: 0.5
+		}).addTo(map);		
+		
+		clickCircleCentre = L.circle(e.latlng, 2, {
+			color: '#000000',
+			opacity: 0.75
+		}).addTo(map);
+	}
+	map.on('click', onMapClick);
+
 </script>
 <p><strong>Disclaimer</strong></p>
 <p>This visualisation was done as a programming exercise.  If you actually make use of it to plan your Primary One registration strategy for your kid, don’t hold me responsible if your kid doesn’t get into your school of choice.  Registration statistics are provided as-is, and no claims are made as to the accuracy of the data.</p>
