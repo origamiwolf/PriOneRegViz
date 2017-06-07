@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#157878">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/PriOneRegViz/assets/css/style.css?v=f6bf5a8f3a721a9b48c5d56068614c360f58b383">
     <link rel="stylesheet" href="./leaflet/leaflet.css" />
     <script src="./leaflet/leaflet.js"></script>
     <script src="geodata.geojson" type="text/javascript"></script>
@@ -66,7 +67,7 @@
 
 	/* set feature display */
 	function onEachFeature(feature, layer) {
-		layer.bindPopup(feature.properties.School);
+		layer.bindPopup(feature.properties.School + feature.properties.Y2016);
 	}
 
 
