@@ -8,20 +8,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#157878">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="https://origamiwolf.github.io/PriOneRegViz/assets/css/style.css?v=f6bf5a8f3a721a9b48c5d56068614c360f58b383">
+    <link rel="stylesheet" href="./css/style.css" />
     <link rel="stylesheet" href="./leaflet/leaflet.css" />
+    <link rel="stylesheet" href="./css/extra.css" />
     <script src="./leaflet/leaflet.js"></script>
     <script src="geodata.geojson" type="text/javascript"></script>
   </head>
-  <body>
-    <section class="page-header">
-      <h1 class="project-name">PriOneRegViz</h1>
-      <h2 class="project-tagline">Visualisation of Singapore Primary Schools and associated registration statistics</h2>
-      
-        <a href="https://github.com/origamiwolf/PriOneRegViz" class="btn">View on GitHub</a>
-      
-      
-    </section>
+	<body>
+		<section class="page-header">
+			<h1 class="project-name">PriOneRegViz</h1>
+			<h2 class="project-tagline">Visualisation of Singapore Primary Schools and associated registration statistics</h2>
+			<a href="https://github.com/origamiwolf/PriOneRegViz" class="btn">View on GitHub</a>
+		</section>
 
     <section class="main-content">
       <h2 id="primary-one-registration-statistics-visualiser">Primary One Registration Statistics Visualiser</h2>
@@ -32,14 +30,10 @@
 
 <p>Schools registration statistics taken from various online sources (<a href="https://www.kiasuparents.com">KiasuParents</a>, <a href="http://www.domainofexperts.com">Domain Of Experts</a>, <a href="https://elite.com.sg">elite.com.sg</a> and individual school websites).</p>
 
-<p><strong>Disclaimer</strong></p>
 
-<p>This visualisation was done as a programming exercise.  If you actually make use of it to plan your Primary One registration strategy for your kid, don’t hold me responsible if your kid doesn’t get into your school of choice.  Registration statistics are provided as-is, and no claims are made as to the accuracy of the data.</p>
-
-<div id="map" style="height: 600px;"></div>
+<div id="map" style="height: 600px"></div>
 <script>
-	var centre = L.bounds([1.56073, 104.11475], [1.16, 103.502]).getCenter();
-	var map = L.map('map').setView([centre.x, centre.y], 11);
+	var map = L.map('map').setView([1.3603, 103.8084], 12);
 
 	var basemap = L.tileLayer('https://maps-{s}.onemap.sg/v3/Default/{z}/{x}/{y}.png', {
 			attribution: 'Map data &copy; contributors, <a href="http://SLA.gov.sg">Singapore Land Authority</a>',
@@ -67,27 +61,56 @@
 		var Y2016 = feature.properties.Y2016.split(',');
 		var Y2015 = feature.properties.Y2015.split(',');
 		var Y2014 = feature.properties.Y2014.split(',');
+		var p_name = ['Phase 1','Phase 2A1','Phase2A2','','','Phase 2B','','Phase 2C','','Phase 2C(S)'];
+		
+		function displayOcc(x) {
+			var ret = '<td class="occ">';
+			if (x >= 100) {
+				ret = ret + '<b>' + x + '%</b></td>';
+			} else {
+				ret = ret + x + '%</td>';
+			}
+			return ret;
+		}
+
+		function displayApp(x) {
+			var ret = '<td class="app">';
+			if (x > 1.00) {
+				ret = ret + '<b>(' + x + ')</b>';
+			} else {
+				if (x <= 0.01) {
+					ret = ret + '-';
+				} else {
+					ret = ret + '(' + x + ')';
+				}
+			}
+			ret = ret + '</td>';
+			return ret;
+		}
 						
 		var sch_data = '<h2>'+feature.properties.School+'</h2>';
 		sch_data = sch_data + '<b>Handicap Facilities</b>: ' + feature.properties.HFac + '<br>';
-		sch_data = sch_data + '<b>Mother Tongues Offered: </b>' + mtM + ' ' + mtC + ' ' + mtT + '<br>';
+		sch_data = sch_data + '<b>Mother Tongues Offered: </b>' + mtM + ' ' + mtC + ' ' + mtT + '<br><br>';
 		sch_data = sch_data + '<table>';
-		sch_data = sch_data + '<tr><th></th><th>2016</th><th>2015</th><th>2014</th></tr>';
+		sch_data = sch_data + '<tr><th></th><th colspan="2">2016</th><th colspan="2">2015</th><th colspan="2">2014</th></tr>';		
+		sch_data = sch_data + '<tr><td class="td0">Places</td><td class="occ" colspan=2>'+Y2016[0]+'%</td><td class="occ" colspan=2>'+Y2015[0]+'%</td><td class="occ" colspan=2>'+Y2014[0]+'%</td></tr>';
 		
-		sch_data = sch_data + '<tr><td>Places</td><td>'+Y2016[0]+'</td><td>'+Y2015[0]+'</td><td>'+Y2014[0]+'</td></tr>';
-		sch_data = sch_data + '<tr><td>Phase 1</td><td>'+Y2016[1]+'</td><td>'+Y2015[1]+'</td><td>'+Y2014[1]+'</td></tr>';
-		sch_data = sch_data + '<tr><td>Phase 2A1</td><td>'+Y2016[2]+'</td><td>'+Y2015[2]+'</td><td>'+Y2014[2]+'</td></tr>';
-		sch_data = sch_data + '<tr><td>Phase 2A2</td><td>'+Y2016[3]+'</td><td>'+Y2015[3]+'</td><td>'+Y2014[3]+'</td></tr>';
-		sch_data = sch_data + '<tr><td>Phase 2B</td><td>'+Y2016[5]+ '(' + Y2016[4] + ')'+'</td><td>'+Y2015[5]+ '(' + Y2015[4] + ')'+'</td><td>'+Y2014[5]+'(' + Y2014[4] + ')'+'</td></tr>';
-		sch_data = sch_data + '<tr><td>Phase 2C</td><td>'+Y2016[7]+ '(' + Y2016[6] + ')'+'</td><td>'+Y2015[7]+ '(' + Y2015[6] + ')'+'</td><td>'+Y2014[7]+'(' + Y2014[6] + ')'+'</td></tr>';
-		sch_data = sch_data + '<tr><td>Phase 2C(S)</td><td>'+Y2016[9]+ '(' + Y2016[8] + ')'+'</td><td>'+Y2015[9]+ '(' + Y2015[8] + ')'+'</td><td>'+Y2014[9]+'(' + Y2014[8] + ')'+'</td></tr>';
+		for (i=1;i<4;i++) {
+			sch_data = sch_data + '<tr><td class="td0">' + p_name[i-1] + '</td><td class="occ" colspan=2>'+Y2016[i]+'</td><td class="occ" colspan=2>'+Y2015[i]+'</td><td class="occ" colspan=2>'+Y2014[i]+'</td></tr>';
+		}
+		
+		for (i=5;i<10;i+=2) {
+			sch_data = sch_data + '<tr><td class="td0">' + p_name[i] + '</td>' + displayOcc(Y2016[i]) + displayApp(Y2016[i-1]) + displayOcc(Y2015[i]) + displayApp(Y2015[i-1]) + displayOcc(Y2014[i]) + displayApp(Y2014[i-1]);
+		}
 		
 		sch_data = sch_data + '</table>';
 		
-		layer.bindPopup(sch_data, {maxWidth: 400});
+		layer.bindPopup(sch_data, {maxWidth: '400', className: 'custom-popup'});
 	}
 
 </script>
+<p><strong>Disclaimer</strong></p>
+<p>This visualisation was done as a programming exercise.  If you actually make use of it to plan your Primary One registration strategy for your kid, don’t hold me responsible if your kid doesn’t get into your school of choice.  Registration statistics are provided as-is, and no claims are made as to the accuracy of the data.</p>
 
       <footer class="site-footer">
         

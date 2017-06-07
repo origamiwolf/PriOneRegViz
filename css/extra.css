@@ -1,0 +1,40 @@
+.custom-popup .leaflet-popup-content-wrapper table {
+	margin: 0px;
+	padding: 0px;
+	border-collapse: collapse;
+	border-style: solid;
+	border-width: 1px 1px 1px 1px;
+  }
+  
+.custom-popup .leaflet-popup-content-wrapper td {
+	margin: 0;
+	padding: 1px;
+	text-align: center;
+  }
+  
+.custom-popup .leaflet-popup-content-wrapper td.td0 {
+	margin: 0;
+	padding: 1px;
+	text-align: left;
+	border-width: 0px 1px 0px 1px;	
+  }
+  
+.custom-popup .leaflet-popup-content-wrapper td.occ {
+	margin: 1px;
+	padding: 2px;
+	text-align: center;
+	border-width: 0px 0px 0px 1px;
+  }
+  
+.custom-popup .leaflet-popup-content-wrapper td.app {
+	margin: 1px;
+	padding: 2px;
+	text-align: center;
+	border-width: 0px 1px 0px 0px;
+  }
+  
+.custom-popup .leaflet-popup-content-wrapper th {
+	margin: 0;
+	padding: 1px;
+	text-align: center;
+  }
