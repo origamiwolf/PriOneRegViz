@@ -25,14 +25,27 @@
       <h2 id="primary-one-registration-statistics-visualiser">Primary One Registration Statistics Visualiser</h2>
 
 <p>A Leaflet.js map showing Singapore’s primary schools, and statistics pertaining to the Primary One Registration Exercise.</p>
-
-<p>Schools Geodata obtained from <a href="https://data.gov.sg">Data.gov.sg</a> and <a href="[https://www.onemap.sg]">OneMap</a>.</p>
-
-<p>Schools registration statistics taken from various online sources (<a href="https://www.kiasuparents.com">KiasuParents</a>, <a href="http://www.domainofexperts.com">Domain Of Experts</a>, <a href="https://elite.com.sg">elite.com.sg</a> and individual school websites).</p>
-
-<div id="mapnav">Markers indicate schools participating in the 2017 registration exercise.<br>Mouseover each marker to bring up statistics for the school.</div>
+<div id="mapbox">
+<div id="mapnav">Mouseover each marker to bring up statistics for the school.<br><br>Click on a map point to list schools within a 2 km radius, or enter a postal code below: 
+<form id="postcode">
+	<input type="text" id="searchVal"><input type="submit" onclick="UserAction()">
+</form>
+<p></p><div id="sch_list"></div></div>
 <div id="map"></div>
+</div>
 <script>
+function UserAction() {
+	searchVal = document.getElementById("searchVal").value;
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("GET", "https://developers.onemap.sg/commonapi/search?searchVal=" + searchVal + "&returnGeom=Y&getAddrDetails=Y&pageNum=1", true);
+    xhttp.setRequestHeader("Content-type", "application/json");
+    xhttp.send();
+//    var response = JSON.parse(xhttp.responseText);
+    console.log(xhttp.status);
+    console.log(xhttp.statusText);
+}	
+	
+	
 	var map = L.map('map').setView([1.3603, 103.8084], 12);
 
 	var basemap = L.tileLayer('https://maps-{s}.onemap.sg/v3/Default/{z}/{x}/{y}.png', {
@@ -48,7 +61,7 @@
 	basemap.addTo(map);
 
 	/* add schools	*/
-
+	var schoolCoords = []
 	L.geoJSON(schools, {
 		onEachFeature: schoolPopup
 	}).addTo(map);
@@ -62,6 +75,8 @@
 		var Y2015 = feature.properties.Y2015.split(',');
 		var Y2014 = feature.properties.Y2014.split(',');
 		var p_name = ['Phase 1','Phase 2A1','Phase2A2','','','Phase 2B','','Phase 2C','','Phase 2C(S)'];
+		// stuff coordinates into an array for distance calculations later.  Reversed coordinates again cos of GeoJSON
+		schoolCoords.push([feature.geometry.coordinates[1], feature.geometry.coordinates[0]]);
 
 		function displayPlace(x) {
 			var ret = '<td class="td1">';
@@ -117,15 +132,23 @@
 		}
 		
 		sch_data = sch_data + '</table>';
-		
+
 		layer.bindPopup(sch_data, {maxWidth: '400', className: 'custom-popup'});
-		/* activate on mouseover */
-		layer.on('mouseover', function() {layer.openPopup(); });
-		layer.on('mouseout', function() {layer.closePopup(); });
+
+		/* marker functionality */
+		/* enable marker highlights */
+		var mapIcon = L.Icon.Default.extend({
+		});
+		var regIcon = new mapIcon({ iconUrl: "marker-icon.png" });
+		var highIcon = new mapIcon({ iconUrl: "marker-icon2.png" });
+
+		/* activate and highlight on mouseover */
+		layer.on('mouseover', function(e) { layer.openPopup(); e.target.setIcon(highIcon); });
+		layer.on('mouseout', function(e) { e.target.setIcon(regIcon); layer.closePopup(); });
 	}
 
-	/* add functionality for the 2 km circle */
-	/* I really should be defining a new object for this */
+	/* add functionality for the 1 km and 2 km circles */
+	/* I really should be defining a new layer group for this */
 	var clickCircle1;
 	var clickCircle2;
 	var clickCircleCentre;
@@ -135,6 +158,31 @@
 			map.removeLayer(clickCircle1);
 			map.removeLayer(clickCircle2);
 			map.removeLayer(clickCircleCentre);
+		}
+
+		/* iterate through the list of schools to check if they are within the circles*/
+		
+		nearbySchools = [];
+		for (i=0;i<schoolCoords.length;i++) {
+			dist = e.latlng.distanceTo(schoolCoords[i]);
+			if (dist<=2000) {
+				nearbySchools.push({ sch_index: i, sch_dist: dist });
+			}
+		}
+		nearbySchools = nearbySchools.sort(function(a,b) { return a.sch_dist - b.sch_dist});
+		
+		var sch_list = document.getElementById("sch_list");
+			while(sch_list.firstChild) {
+				sch_list.removeChild(sch_list.firstChild);
+			}
+		for (i=0;i<nearbySchools.length;i++) {
+			var sch_text = document.createElement("p");
+			var sch_name = sch_text.appendChild(document.createElement("b"));
+			sch_name.appendChild(document.createTextNode(schools.features[nearbySchools[i].sch_index].properties.School));
+			sch_text.appendChild(document.createElement("br"));
+			sch_text.appendChild(document.createTextNode((nearbySchools[i].sch_dist/1000).toFixed(1)));			
+			
+			document.getElementById("sch_list").appendChild(sch_text);
 		}
 		
 		clickCircle1 = L.circle(e.latlng, 2000, {
@@ -152,10 +200,16 @@
 			opacity: 0.75
 		}).addTo(map);
 	}
+	
 	map.on('click', onMapClick);
 
 </script>
-<p><strong>Disclaimer</strong></p>
+<h3>Implementation Notes</h3>
+Schools Geodata obtained from <a href="https://data.gov.sg">Data.gov.sg</a> and <a href="[https://www.onemap.sg]">OneMap</a>. Schools registration statistics taken from various online sources (<a href="https://www.kiasuparents.com">KiasuParents</a>, <a href="http://www.domainofexperts.com">Domain Of Experts</a>, <a href="https://elite.com.sg">elite.com.sg</a> and individual school websites).
+Data was cleaned and coded into GeoJSON in Python.
+</p>
+
+<h3>Disclaimer</h3>
 <p>This visualisation was done as a programming exercise.  If you actually make use of it to plan your Primary One registration strategy for your kid, don’t hold me responsible if your kid doesn’t get into your school of choice.  Registration statistics are provided as-is, and no claims are made as to the accuracy of the data.</p>
 
       <footer class="site-footer">

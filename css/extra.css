@@ -30,10 +30,21 @@
 	width: 80px;
   }
 
+# mapbox {
+	height:600px;
+}
+
 #mapnav {
 	float: left;
 	width: 20%;
 	font-size: 80%;
+	height:200px;
+}
+
+#sch_list {
+	font-size: 80%;
+	overflow: auto;
+	height:400px;
 }
 
 #map {
