@@ -78,7 +78,8 @@ function SearchAddress() {
 
 	/* add schools	*/
 	var schoolCoords = []
-	L.geoJSON(schools, {
+	
+	var geoJSONLayer = L.geoJSON(schools, {
 		onEachFeature: schoolPopup
 	}).addTo(map);
 
@@ -217,14 +218,21 @@ function SearchAddress() {
 			document.getElementById("sch_list").appendChild(sch_text);
 		} else {
 			for (i=0;i<nearbySchools.length;i++) {
-				var sch_text = document.createElement("p");
-				var sch_name = sch_text.appendChild(document.createElement("b"));
-				sch_name.appendChild(document.createTextNode(schools.features[nearbySchools[i].sch_index].properties.School));
+				var sch_text = document.createElement("button");
+				sch_text.setAttribute("class","buttonResults");
+				var sch_text_name = document.createElement("b");
+				sch_text_name.appendChild(document.createTextNode(schools.features[nearbySchools[i].sch_index].properties.School));
+				sch_text.appendChild(sch_text_name);
 				sch_text.appendChild(document.createElement("br"));
-				sch_text.appendChild(document.createTextNode((nearbySchools[i].sch_dist/1000).toFixed(1) + ' km'));			
+				sch_text.appendChild(document.createTextNode((nearbySchools[i].sch_dist/1000).toFixed(1) + ' km'));
+				sch_text.setAttribute("onclick","buttonClick(" + nearbySchools[i].sch_index + ")");
 				document.getElementById("sch_list").appendChild(sch_text);
 			}
 		}	
+	}
+	
+	function buttonClick(x) {
+		geoJSONLayer.getLayers()[x].openPopup()
 	}
 	
 	function onMapClick(e) {

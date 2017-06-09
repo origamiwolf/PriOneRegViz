@@ -69,3 +69,11 @@ input.searchBox {
     box-sizing:border-box;
     -moz-box-sizing:border-box;
 }
+
+button.buttonResults {
+	background-color: transparent;
+	text-align: left;
+	border: none;
+	padding-bottom: 10px;
+	cursor: default;
+}
