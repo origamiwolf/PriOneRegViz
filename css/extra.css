@@ -39,6 +39,7 @@
 	width: 20%;
 	font-size: 80%;
 	height:200px;
+	padding-right:8px;
 }
 
 #sch_list {
@@ -49,4 +50,22 @@
 
 #map {
 	height:600px;
+}
+
+input.searchButton {
+	background-image: url(/images/search-icon.png);
+    background-color: transparent; 
+    background-repeat: no-repeat;  
+    background-position: 8px 0px;  
+    border: none;      
+    cursor: pointer;        
+    height: 24px;           
+    vertical-align: middle;
+    width: 32px;
+}
+
+input.searchBox {
+    width:80%;
+    box-sizing:border-box;
+    -moz-box-sizing:border-box;
 }

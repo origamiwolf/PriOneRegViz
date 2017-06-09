@@ -24,26 +24,44 @@
     <section class="main-content">
       <h2 id="primary-one-registration-statistics-visualiser">Primary One Registration Statistics Visualiser</h2>
 
-<p>A Leaflet.js map showing Singapore’s primary schools, and statistics pertaining to the Primary One Registration Exercise.</p>
+<p>A Leaflet.js map showing Singapore’s primary schools, and statistics pertaining to the 2017 Primary One Registration Exercise.</p>
 <div id="mapbox">
-<div id="mapnav">Mouseover each marker to bring up statistics for the school.<br><br>Click on a map point to list schools within a 2 km radius, or enter a postal code below: 
-<input type="text" id="searchVal"><input type="button" onclick="UserAction()">
+<div id="mapnav">Click on a map point to list schools within a 2 km radius, or enter a postal code or address below:<br><br>
+<input type="text" id="searchVal" class="searchBox"><input type="button" onclick="SearchAddress()" class="searchButton">
 <p></p><div id="sch_list"></div></div>
 <div id="map"></div>
 </div>
 <script>
-function UserAction() {
+	
+/* basic OneMap search functionality */
+/* extracts only the first address for now */
+
+function SearchAddress() {
 	searchVal = document.getElementById("searchVal").value;
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", "https://developers.onemap.sg/commonapi/search?searchVal=" + searchVal + "&returnGeom=Y&getAddrDetails=Y&pageNum=1", true);
-//    xhttp.setRequestHeader("Content-type", "application/json");
-    xhr.send();
-//    var response = JSON.parse(xhttp.responseText);
-    console.log(xhr.status);
-    console.log(xhr.statusText);
-}	
-	
-	
+	xhr.open("GET","https://developers.onemap.sg/commonapi/search?searchVal=" + searchVal + "&returnGeom=Y&getAddrDetails=Y&pageNum=1",true);
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState == 4) {
+			if (xhr.status == 200) {
+				var response = JSON.parse(xhr.responseText);
+				if (response.results.length > 0) {
+					resultlatlng = [response.results[0].LATITUDE, response.results[0].LONGITUDE];
+					listSchools(resultlatlng);
+				} else {
+					alert("Could not find this address, building or postal code!");
+				}				
+			} else if (searchVal == '') {
+				alert("Please input an address or postal code."); 
+			} else {
+				alert("Search request failed - Try again later please.");
+			}
+		}
+	}
+	xhr.send(null);   
+}
+
+/* add the map */	
+		
 	var map = L.map('map').setView([1.3603, 103.8084], 12);
 
 	var basemap = L.tileLayer('https://maps-{s}.onemap.sg/v3/Default/{z}/{x}/{y}.png', {
@@ -151,18 +169,38 @@ function UserAction() {
 	var clickCircle2;
 	var clickCircleCentre;
 	
-	function onMapClick(e) {
+	function listSchools(latlng) {
+		var origin = L.latLng(latlng);
+		
+		// clear existing circles
 		if (clickCircleCentre != undefined) {
 			map.removeLayer(clickCircle1);
 			map.removeLayer(clickCircle2);
 			map.removeLayer(clickCircleCentre);
 		}
-
-		/* iterate through the list of schools to check if they are within the circles*/
+		// draw circles
+		clickCircle1 = L.circle(origin, 2000, {
+			color: '#f07300',
+			opacity: 0.3
+		}).addTo(map);
 		
+		clickCircle2 = L.circle(origin, 1000, {
+			color: '#f07300',
+			opacity: 0.5
+		}).addTo(map);		
+		
+		clickCircleCentre = L.circle(origin, 2, {
+			color: '#000000',
+			opacity: 0.75
+		}).addTo(map);		
+		
+		map.setView(origin, 14);
+		
+		/* iterate through the list of schools to check if they are within the circles*/		
 		nearbySchools = [];
+				
 		for (i=0;i<schoolCoords.length;i++) {
-			dist = e.latlng.distanceTo(schoolCoords[i]);
+			dist = origin.distanceTo(schoolCoords[i]);
 			if (dist<=2000) {
 				nearbySchools.push({ sch_index: i, sch_dist: dist });
 			}
@@ -170,38 +208,39 @@ function UserAction() {
 		nearbySchools = nearbySchools.sort(function(a,b) { return a.sch_dist - b.sch_dist});
 		
 		var sch_list = document.getElementById("sch_list");
-			while(sch_list.firstChild) {
-				sch_list.removeChild(sch_list.firstChild);
-			}
-		for (i=0;i<nearbySchools.length;i++) {
-			var sch_text = document.createElement("p");
-			var sch_name = sch_text.appendChild(document.createElement("b"));
-			sch_name.appendChild(document.createTextNode(schools.features[nearbySchools[i].sch_index].properties.School));
-			sch_text.appendChild(document.createElement("br"));
-			sch_text.appendChild(document.createTextNode((nearbySchools[i].sch_dist/1000).toFixed(1)));			
-			
-			document.getElementById("sch_list").appendChild(sch_text);
+		while(sch_list.firstChild) {
+			sch_list.removeChild(sch_list.firstChild);
 		}
-		
-		clickCircle1 = L.circle(e.latlng, 2000, {
-			color: '#f07300',
-			opacity: 0.3
-		}).addTo(map);
-		
-		clickCircle2 = L.circle(e.latlng, 1000, {
-			color: '#f07300',
-			opacity: 0.5
-		}).addTo(map);		
-		
-		clickCircleCentre = L.circle(e.latlng, 2, {
-			color: '#000000',
-			opacity: 0.75
-		}).addTo(map);
+		if (nearbySchools.length == 0) {
+			var sch_text = document.createElement("em");
+			sch_text.appendChild(document.createTextNode("No schools within 2km of specified point"));
+			document.getElementById("sch_list").appendChild(sch_text);
+		} else {
+			for (i=0;i<nearbySchools.length;i++) {
+				var sch_text = document.createElement("p");
+				var sch_name = sch_text.appendChild(document.createElement("b"));
+				sch_name.appendChild(document.createTextNode(schools.features[nearbySchools[i].sch_index].properties.School));
+				sch_text.appendChild(document.createElement("br"));
+				sch_text.appendChild(document.createTextNode((nearbySchools[i].sch_dist/1000).toFixed(1) + ' km'));			
+				document.getElementById("sch_list").appendChild(sch_text);
+			}
+		}	
+	}
+	
+	function onMapClick(e) {
+		listSchools(e.latlng);
 	}
 	
 	map.on('click', onMapClick);
 
 </script>
+<h3>What do those numbers mean?</h3>
+<p>The percentages indicate the cumulative percentage of places occupied at the <b>end</b> of the phase.<br>A percentage in <b>bold</b> indicates that all places have been filled.</p>
+<p>Numbers in parentheses indicate the <b>ratio of applicants to vacancies</b> for a particular phase.<br>A number in <b>bold</b> indicates an oversubscription for that phase.<br>A dash (-) indicates no applicants for that particular phase (e.g., if all places are taken by the end of Phase 2C, then Phase 2C(S) will not be conducted and hence there will be no applicants).</p>
+<p>For example, an entry such as:<br>
+<table><tr><td>Phase 2C</td><td>78% (0.67)</td></tr></table><br>
+indicates that there were 0.67 applicants for each vacancy for Phase 2C, and that 78% of the total number of school vacancies had been filled by the end of that phase.
+</p>
 <h3>Implementation Notes</h3>
 Schools Geodata obtained from <a href="https://data.gov.sg">Data.gov.sg</a> and <a href="[https://www.onemap.sg]">OneMap</a>. Schools registration statistics taken from various online sources (<a href="https://www.kiasuparents.com">KiasuParents</a>, <a href="http://www.domainofexperts.com">Domain Of Experts</a>, <a href="https://elite.com.sg">elite.com.sg</a> and individual school websites).
 Data was cleaned and coded into GeoJSON in Python.
