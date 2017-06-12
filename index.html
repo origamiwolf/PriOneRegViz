@@ -28,7 +28,7 @@
 <p>A Leaflet.js map showing Singapore’s primary schools, and statistics pertaining to the 2017 Primary One Registration Exercise.</p>
 <div id="mapbox">
 <div id="mapnav">Click on a map point to list schools within a 2 km radius, or enter a postal code or address below:<br><br>
-<input type="text" id="searchVal" class="searchBox"><input type="button" onclick="SearchAddress()" class="searchButton">
+<input type="text" id="searchVal" class="searchBox"><input type="button" id="searchButton" onclick="SearchAddress()" class="searchButton">
 <p></p><div id="sch_list"></div></div>
 <div id="map"></div>
 </div>
@@ -52,6 +52,14 @@
 
 	/* add click function to mark schools within 2 km radius */
 	map.on('click', onMapClick);
+	
+	/* listener for search box */
+	document.getElementById("searchVal").addEventListener("keyup", function(event) {
+		event.preventDefault();
+		if (event.keyCode == 13) {
+			document.getElementById("searchButton").click();
+		}
+	});
 </script>
 <h3>What do those numbers mean?</h3>
 <p>The percentages indicate the cumulative percentage of places occupied at the <b>end</b> of the phase.<br>A percentage in <b>bold</b> indicates that all places have been filled.</p>
