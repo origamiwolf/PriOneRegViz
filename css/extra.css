@@ -29,7 +29,7 @@
 	text-align: center;
 	width: 80px;
   }
-
+  
 # mapbox {
 	height:600px;
 }
@@ -50,6 +50,18 @@
 
 #map {
 	height:600px;
+}
+
+#schoolname {
+	font-size: 150%;
+	color: #159957;
+}
+
+#schoolinfo {
+}
+
+#handicap {
+	vertical-align: middle;
 }
 
 input.searchButton {
