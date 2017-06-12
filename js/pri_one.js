@@ -80,7 +80,7 @@ function schoolPopup(feature, layer) {
 	var sch_data = '<div><span id="schoolname">'+feature.properties.School+'</span></div>';
 	sch_data = sch_data + '<div><span id="schoolinfo">';
 	if (feature.properties.HFac == 'YES') {
-		sch_data = sch_data + '<img id="handicap" src="../images/handicap-icon.png" alt="Handicap Facilities">';
+		sch_data = sch_data + '<img id="handicap" src="./images/handicap-icon.png" alt="Handicap Facilities">';
 	}	
 	sch_data = sch_data + ' ' + feature.properties.Nature;
 	if (feature.properties.GEP == 'YES') {
