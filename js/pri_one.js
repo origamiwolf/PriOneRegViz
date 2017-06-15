@@ -78,22 +78,30 @@ function schoolPopup(feature, layer) {
 	}
 						
 	var sch_data = '<div><span id="schoolname">'+feature.properties.School+'</span></div>';
-	sch_data = sch_data + '<div><span id="schoolinfo">';
+	sch_data = sch_data + '<div id="schoolinfo">';
+	sch_data = sch_data + '<span id="highlight1">' + feature.properties.Nature + '</span>';
 	if (feature.properties.HFac == 'YES') {
-		sch_data = sch_data + '<img id="handicap" src="./images/handicap-icon.png" alt="Handicap Facilities">';
+		sch_data = sch_data + '<span id="highlight1">HANDICAP FACILITIES</span>';
 	}	
-	sch_data = sch_data + ' ' + feature.properties.Nature;
 	if (feature.properties.GEP == 'YES') {
-		sch_data = sch_data + ' | GEP';
+		sch_data = sch_data + '<span id="highlight1">GEP</span>';
 	}
 	if (feature.properties.SAP == 'YES') {
-		sch_data = sch_data + ' | SAP';
+		sch_data = sch_data + '<span id="highlight1">SAP</span>';
 	}
-	sch_data = sch_data + '</span></div>'
-
-	sch_data = sch_data + '<b>Mother Tongues Offered: </b>' + mtM + ' ' + mtC + ' ' + mtT + '<br><br>';
-
-	sch_data = sch_data + '<table>';
+	sch_data = sch_data + '</div><div="schoolinfo">'
+	if (feature.properties.MT.includes('M')) {
+		sch_data = sch_data + '<span id="highlight2">MALAY</span>';
+	}
+	if (feature.properties.MT.includes('C')) {
+		sch_data = sch_data + '<span id="highlight2">CHINESE</span>';
+	}
+	if (feature.properties.MT.includes('T')) {
+		sch_data = sch_data + '<span id="highlight2">TAMIL</span>';
+	}
+	sch_data = sch_data + '</div>';
+	
+	sch_data = sch_data + '<table id="stats_table">';
 	sch_data = sch_data + '<tr><th></th><th>2016</th><th>2015</th><th>2014</th></tr>';		
 
 	sch_data = sch_data + '<tr><td class="td0">Places</td>' + displayPlace(Y2016[0]) + displayPlace(Y2015[0]) + displayPlace(Y2014[0]) + '</tr>';

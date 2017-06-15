@@ -58,10 +58,31 @@
 }
 
 #schoolinfo {
+	margin: 5px 0px 5px 0px;
 }
 
-#handicap {
-	vertical-align: middle;
+#highlight1 {
+	padding: 2px 5px 2px 5px;
+	color: white;
+	background-color: #3366ff;
+	-moz-border-radius:2px 2px 2px 2px;
+	border-radius:2px 2px 2px 2px;
+	margin: 2px 2px 2px 2px;
+	font-weight: bold;
+}
+
+#highlight2 {
+	padding: 2px 5px 2px 5px;
+	color: white;
+	background-color: #ff6600;
+	-moz-border-radius:2px 2px 2px 2px;
+	border-radius:2px 2px 2px 2px;
+	margin: 2px 2px 2px 2px;
+	font-weight: bold;
+}
+
+#stats_table {
+	margin: 5px 0px 0px 0px;
 }
 
 input.searchButton {
