@@ -35,14 +35,22 @@ function schoolPopup(feature, layer) {
 	var mtM = feature.properties.MT.includes('M') ? 'Malay':'';
 	var mtC = feature.properties.MT.includes('C') ? 'Chinese':'';
 	var mtT = feature.properties.MT.includes('T') ? 'Tamil':'';
-	var Y2017 = feature.properties.Y0.split(',');
-	var Y2016 = feature.properties.Y1.split(',');
-	var Y2015 = feature.properties.Y2.split(',');
-	var Y2014 = feature.properties.Y3.split(',');
+	var years = [2017,2016,2015,2014];
+	var Y0_features = feature.properties.Y0.split(',');
+	var Y1_features = feature.properties.Y1.split(',');
+	var Y2_features = feature.properties.Y2.split(',');
+	var Y3_features = feature.properties.Y3.split(',');
 	var p_name = ['Phase 1','Phase 2A1','Phase2A2','','','Phase 2B','','Phase 2C','','Phase 2C(S)'];
 	// stuff coordinates into an array for distance calculations later.  Reversed coordinates again cos of GeoJSON
 	schoolCoords.push([feature.geometry.coordinates[1], feature.geometry.coordinates[0]]);
 
+	function displayYear(x) {
+		var ret = '<th>';
+		ret = ret + x + ' (' + zodiac(x) + ')';
+		ret = ret + '</th>';
+		return ret;
+	}
+	
 	function displayPlace(x) {
 		var ret = '<td class="td1">';
 		ret = ret + ((x == 0) ? '-' : '<b>' + x + '</b>');
@@ -103,16 +111,16 @@ function schoolPopup(feature, layer) {
 	sch_data = sch_data + '</div>';
 	
 	sch_data = sch_data + '<table id="stats_table">';
-	sch_data = sch_data + '<tr><th></th><th>2017</th><th>2016</th><th>2015</th><th>2014</th></tr>';		
-
-	sch_data = sch_data + '<tr><td class="td0">Places</td>' + displayPlace(Y2017[0]) + displayPlace(Y2016[0]) + displayPlace(Y2015[0]) + displayPlace(Y2014[0]) + '</tr>';
+	sch_data = sch_data + '<tr><th></th>' + displayYear(years[0]) + displayYear(years[1]) + displayYear(years[2]) + displayYear(years[3]) + '</tr>';		
+	
+	sch_data = sch_data + '<tr><td class="td0">Places</td>' + displayPlace(Y0_features[0]) + displayPlace(Y1_features[0]) + displayPlace(Y2_features[0]) + displayPlace(Y3_features[0]) + '</tr>';
 	
 	for (i=1;i<4;i++) {
-		sch_data = sch_data + '<tr><td class="td0">' + p_name[i-1] + '</td>' + displayOcc(Y2017[i]) + displayOcc(Y2016[i]) + displayOcc(Y2015[i]) + displayOcc(Y2014[i]) + '</tr>';
+		sch_data = sch_data + '<tr><td class="td0">' + p_name[i-1] + '</td>' + displayOcc(Y0_features[i]) + displayOcc(Y1_features[i]) + displayOcc(Y2_features[i]) + displayOcc(Y3_features[i]) + '</tr>';
 	}
 	
 	for (i=5;i<10;i+=2) {
-		sch_data = sch_data + '<tr><td class="td0">' + p_name[i] + '</td>' + displayOccApp(Y2017[i], Y2017[i-1]) + displayOccApp(Y2016[i], Y2016[i-1]) + displayOccApp(Y2015[i], Y2015[i-1]) + displayOccApp(Y2014[i], Y2014[i-1]);
+		sch_data = sch_data + '<tr><td class="td0">' + p_name[i] + '</td>' + displayOccApp(Y0_features[i], Y0_features[i-1]) + displayOccApp(Y1_features[i], Y1_features[i-1]) + displayOccApp(Y2_features[i], Y2_features[i-1]) + displayOccApp(Y3_features[i], Y3_features[i-1]);
 	}
 	
 	sch_data = sch_data + '</table>';
@@ -205,6 +213,15 @@ function dblbuttonClick(x) {
 /* helper function */
 function onMapClick(e) {
 	listSchools(e.latlng);
+}
+	
+/* zodiac year computation*/
+function zodiac(x) {
+	var zodiac = ['Rat','Ox','Tiger','Rabbit','Dragon','Snake','Horse','Sheep','Monkey','Rooster','Dog','Pig'];
+	var refYear = 1996;
+	var priSchoolAge = 6;
+	whichZodiac = zodiac[(x - refYear + priSchoolAge)%12];
+	return whichZodiac;
 }
 	
 
