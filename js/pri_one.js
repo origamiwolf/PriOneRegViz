@@ -35,9 +35,10 @@ function schoolPopup(feature, layer) {
 	var mtM = feature.properties.MT.includes('M') ? 'Malay':'';
 	var mtC = feature.properties.MT.includes('C') ? 'Chinese':'';
 	var mtT = feature.properties.MT.includes('T') ? 'Tamil':'';
-	var Y2016 = feature.properties.Y0.split(',');
-	var Y2015 = feature.properties.Y1.split(',');
-	var Y2014 = feature.properties.Y2.split(',');
+	var Y2017 = feature.properties.Y0.split(',');
+	var Y2016 = feature.properties.Y1.split(',');
+	var Y2015 = feature.properties.Y2.split(',');
+	var Y2014 = feature.properties.Y3.split(',');
 	var p_name = ['Phase 1','Phase 2A1','Phase2A2','','','Phase 2B','','Phase 2C','','Phase 2C(S)'];
 	// stuff coordinates into an array for distance calculations later.  Reversed coordinates again cos of GeoJSON
 	schoolCoords.push([feature.geometry.coordinates[1], feature.geometry.coordinates[0]]);
@@ -102,16 +103,16 @@ function schoolPopup(feature, layer) {
 	sch_data = sch_data + '</div>';
 	
 	sch_data = sch_data + '<table id="stats_table">';
-	sch_data = sch_data + '<tr><th></th><th>2016</th><th>2015</th><th>2014</th></tr>';		
+	sch_data = sch_data + '<tr><th></th><th>2017</th><th>2016</th><th>2015</th><th>2014</th></tr>';		
 
-	sch_data = sch_data + '<tr><td class="td0">Places</td>' + displayPlace(Y2016[0]) + displayPlace(Y2015[0]) + displayPlace(Y2014[0]) + '</tr>';
+	sch_data = sch_data + '<tr><td class="td0">Places</td>' + displayPlace(Y2017[0]) + displayPlace(Y2016[0]) + displayPlace(Y2015[0]) + displayPlace(Y2014[0]) + '</tr>';
 	
 	for (i=1;i<4;i++) {
-		sch_data = sch_data + '<tr><td class="td0">' + p_name[i-1] + '</td>' + displayOcc(Y2016[i]) + displayOcc(Y2015[i]) + displayOcc(Y2014[i]) + '</tr>';
+		sch_data = sch_data + '<tr><td class="td0">' + p_name[i-1] + '</td>' + displayOcc(Y2017[i]) + displayOcc(Y2016[i]) + displayOcc(Y2015[i]) + displayOcc(Y2014[i]) + '</tr>';
 	}
 	
 	for (i=5;i<10;i+=2) {
-		sch_data = sch_data + '<tr><td class="td0">' + p_name[i] + '</td>' + displayOccApp(Y2016[i], Y2016[i-1]) + displayOccApp(Y2015[i], Y2015[i-1]) + displayOccApp(Y2014[i], Y2014[i-1]);
+		sch_data = sch_data + '<tr><td class="td0">' + p_name[i] + '</td>' + displayOccApp(Y2017[i], Y2017[i-1]) + displayOccApp(Y2016[i], Y2016[i-1]) + displayOccApp(Y2015[i], Y2015[i-1]) + displayOccApp(Y2014[i], Y2014[i-1]);
 	}
 	
 	sch_data = sch_data + '</table>';
