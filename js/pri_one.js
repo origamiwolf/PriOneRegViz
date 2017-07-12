@@ -40,7 +40,7 @@ function schoolPopup(feature, layer) {
 	var Y1_features = feature.properties.Y1.split(',');
 	var Y2_features = feature.properties.Y2.split(',');
 	var Y3_features = feature.properties.Y3.split(',');
-	var p_name = ['Phase 1','Phase 2A1','Phase2A2','','','Phase 2B','','Phase 2C','','Phase 2C(S)'];
+	var p_name = ['Phase 1','Phase 2A1','Phase 2A2','','','Phase 2B','','Phase 2C','','Phase 2C(S)'];
 	// stuff coordinates into an array for distance calculations later.  Reversed coordinates again cos of GeoJSON
 	schoolCoords.push([feature.geometry.coordinates[1], feature.geometry.coordinates[0]]);
 
